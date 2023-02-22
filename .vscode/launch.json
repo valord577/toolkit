@@ -5,14 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "launch toolkit.go",
+      "name": "launch toolkit - netdev",
       "type": "go",
       "request": "launch",
       "mode": "auto",
-      "program": "${workspaceFolder}/toolkit.go",
+      "program": "${workspaceFolder}/toolkit/netdev",
       "env": {
         "TOOLKIT_LOGS_DEBUG": "1",
-        "TOOLKIT_CONFIG_PATH": "${workspaceFolder}/toolkit.jsonc",
+        "TOOLKIT_NETDEV_REVC": "user@example.com",
+        "TOOLKIT_MAIL_SMTP_HOST": "smtp.example.com",
+        "TOOLKIT_MAIL_SMTP_PORT": "465",
+        "TOOLKIT_MAIL_SMTP_USER": "no-replay@example.com",
+        "TOOLKIT_MAIL_SMTP_PASS": "******",
+        "TOOLKIT_MAIL_SMTP_USE_TLS": "1",
       }
     }
   ]

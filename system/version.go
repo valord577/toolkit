@@ -1,4 +1,4 @@
-package version
+package system
 
 import (
 	"os"
@@ -12,7 +12,7 @@ var (
 	flavor   = "default"
 )
 
-func String() string {
+func Version() string {
 	return filepath.Base(os.Args[0]) + " " + version + "." + flavor + " " + datetime +
 		" " + runtime.Version() + " " + runtime.GOOS + "/" + runtime.GOARCH
 }
