@@ -51,7 +51,7 @@ if command -v git >/dev/null 2>&1 ; then
   popd
 else
   printf "\e[1m\e[33m%s\e[0m\n" "@@@ Warn - unknown command: git"
-  GIT_HASH="unknown"
+  GIT_HASH=${GIT_HASH:-"unknown"}
 fi
 GO_BUILD_VERSION="${GIT_HASH}"
 GO_MACRO_VERSION="-X '${GO_MODULE}/system.version=${GO_BUILD_VERSION}'"
