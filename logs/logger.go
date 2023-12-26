@@ -10,6 +10,16 @@ type Logger struct {
 	suagr *zap.SugaredLogger
 }
 
+func (l *Logger) With(fields ...zap.Field) *Logger {
+	log := l.log.With(fields...)
+	return &Logger{log: log, suagr: log.Sugar()}
+}
+
+func (l *Logger) WithOpts(opts ...zap.Option) *Logger {
+	log := l.log.WithOptions(opts...)
+	return &Logger{log: log, suagr: log.Sugar()}
+}
+
 func (l *Logger) Sync() error {
 	if l.log == nil {
 		return nil

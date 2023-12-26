@@ -55,11 +55,13 @@ func startup(tun *tunnel) {
 		zap.String("service", tun.Service),
 		zap.String("listenOn", tun.ListenOn.string()),
 	)
+	l = l.WithOpts(zap.AddCallerSkip(-1))
 	l.Infof("starting ssh tunnel service")
 
 	for !shutdown {
 		// restart when not shutdown
 		forwarding(tun, l)
+		time.Sleep(1 * time.Second)
 	}
 }
 

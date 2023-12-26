@@ -26,8 +26,7 @@ func With(fields ...zap.Field) *Logger {
 	if l == nil {
 		return nil
 	}
-	log := l.log.With(fields...)
-	return &Logger{log: log, suagr: log.Sugar()}
+	return l.With(fields...)
 }
 
 func WithOpts(opts ...zap.Option) *Logger {
@@ -35,8 +34,7 @@ func WithOpts(opts ...zap.Option) *Logger {
 	if l == nil {
 		return nil
 	}
-	log := l.log.WithOptions(opts...)
-	return &Logger{log: log, suagr: log.Sugar()}
+	return l.WithOpts(opts...)
 }
 
 // Sync calls *zap.Logger.Sync
