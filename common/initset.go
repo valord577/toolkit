@@ -22,7 +22,7 @@ func InitPreset() {
 	}
 
 	if len(os.Args) > 1 {
-		io.WriteString(os.Stderr, system.Version()+"\n")
+		_, _ = io.WriteString(os.Stderr, system.Version()+"\n")
 		os.Exit(0)
 	}
 }

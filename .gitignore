@@ -1,5 +1,8 @@
 .DS_Store
 
 build
-coverage
 out_go
+deploy
+
+coverage.txt
+coverage.html

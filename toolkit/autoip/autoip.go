@@ -99,11 +99,14 @@ func autoip() (err error) {
 		endpoint(), recid(),
 
 		func(resp *http.Response) (e error) {
-			var m map[string]any
-			e = json.NewDecoder(resp.Body).Decode(&m)
+			var v struct {
+				RR    string `json:"RR"`
+				Value string `json:"Value"`
+			}
+			e = json.NewDecoder(resp.Body).Decode(&v)
 			if e == nil {
-				record = m["RR"].(string)
-				rvalue = m["Value"].(string)
+				record = v.RR
+				rvalue = v.Value
 			}
 			return e
 		},
@@ -122,7 +125,7 @@ func autoip() (err error) {
 		func(resp *http.Response) (e error) {
 			b := &strings.Builder{}
 			b.WriteString("\n>>>>>>>>>>\n")
-			resp.Write(b)
+			e = resp.Write(b)
 			b.WriteString("\n<<<<<<<<<<\n")
 
 			logs.Infof("UpdateDomainRecord Response: %s", b.String())

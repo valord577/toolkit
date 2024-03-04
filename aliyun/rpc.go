@@ -98,7 +98,7 @@ func getRequestStr(method, sk string, signParams map[string]string) string {
 
 	// hmac-sha1
 	w := hmac.New(sha1.New, []byte(sk+"&"))
-	w.Write([]byte(strToSign))
+	_, _ = w.Write([]byte(strToSign))
 	sign := base64.StdEncoding.EncodeToString(w.Sum(nil))
 	return "Signature=" + sign + "&" + noSignStr
 }
