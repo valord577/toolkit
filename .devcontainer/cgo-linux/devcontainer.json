@@ -1,0 +1,18 @@
+{
+  "name": "cgo linux",
+  "image": "valord577/linux-cgo1.21:46a4552f452065a59997c37ca41684c21e87ca16",
+  "runArgs": [
+    "--name=toolkit-cgo-linux-${devcontainerId}"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "git.path": "/opt/rh/rh-git227/root/usr/bin/git",
+        "git.autorefresh": true
+      },
+      "extensions": [
+        "golang.go-nightly"
+      ]
+    }
+  }
+}
