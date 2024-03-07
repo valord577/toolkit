@@ -23,7 +23,7 @@ type writer struct {
 
 func (w *writer) Write(bs []byte) (n int, err error) {
 	bs = bytes.TrimRightFunc(bs, func(r rune) bool {
-		return r == '\r' || r == '\n'
+		return r == '\r' || r == '\n' || r == ' '
 	})
 	w.log.Log(w.lvl, string(bs))
 	return

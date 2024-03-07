@@ -2,7 +2,7 @@
   "name": "cgo openwrt",
   "image": "valord577/openwrt-cgo-mt7622:46a4552f452065a59997c37ca41684c21e87ca16",
   "runArgs": [
-    "--name=toolkit-cgo-openwrt-${devcontainerId}"
+    "--name=cgo-openwrt-${devcontainerId}"
   ],
   "customizations": {
     "vscode": {

@@ -2,7 +2,7 @@
   "name": "cgo linux",
   "image": "valord577/linux-cgo1.21:46a4552f452065a59997c37ca41684c21e87ca16",
   "runArgs": [
-    "--name=toolkit-cgo-linux-${devcontainerId}"
+    "--name=cgo-linux-${devcontainerId}"
   ],
   "customizations": {
     "vscode": {
