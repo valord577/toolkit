@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
-GO_MODULE="toolkit"
+basename="${BASH_SOURCE[0]##*/}"
+GO_PROGRAM="${basename%%\.*}"
 
+GO_MODULE="$(go list -m)"
 # ----------------------------
 # Release Build
 # ----------------------------
@@ -18,6 +20,7 @@ SUPPORTED_TARGET=$(cat <<- 'EOF'
 linux/amd64
 linux/arm64
 windows/amd64
+windows/arm64
 darwin/amd64
 darwin/arm64
 EOF
@@ -41,7 +44,7 @@ fi
 # Directory of compiled outputs
 # ----------------------------
 PROJ_ROOT=$(cd "$(dirname ${BASH_SOURCE[0]})"; pwd)
-GO_INST_DIR=${GO_INST_DIR:-"${PROJ_ROOT}/out_go/${GOOS}/${GOARCH}"}
+GO_INST_DIR=${GO_INST_DIR:-"${PROJ_ROOT}/out/${GOOS}/${GOARCH}"}
 # ----------------------------
 # Software Version
 # ----------------------------
@@ -69,25 +72,22 @@ export GOOS="${GOOS}"
 export GOARCH="${GOARCH}"
 export GOPROXY="https://goproxy.cn,direct"
 export GOSUMDB="sum.golang.google.cn"
+
+if [ "${GOOS}" == "windows" ]; then
+  export CGO_ENABLED="0"
+fi
 # ----------------------------
 # Start compiling :p
 # ----------------------------
-GO_PROGRAMS=${GO_PROGRAMS:-""}
-if [ -z "${GO_PROGRAMS}" ]; then
-  GO_PROGRAMS="autoip autossh netdev"
-fi
-
-for prog in ${GO_PROGRAMS[@]}; do
-  GO_BUILD_COMMAND=$(cat <<- EOF
-go build -o '${GO_INST_DIR}/${prog}$(go env GOEXE)' ${GO_BUILD_GCFLAGS} \
+GO_BUILD_COMMAND=$(cat <<- EOF
+go build -v -o '${GO_INST_DIR}/${GO_PROGRAM}$(go env GOEXE)' ${GO_BUILD_GCFLAGS} \
   -ldflags="${GO_BUILD_LDFLAGS} ${GO_MACRO_VERSION} ${GO_MACRO_DATETIME} ${GO_MACRO_FLAVOR}" \
-  '${PROJ_ROOT}/toolkit/${prog}'
+  '${PROJ_ROOT}'
 EOF
 )
-  printf "\e[1m\e[36m%s\e[0m\n" "${GO_BUILD_COMMAND}"
-  eval ${GO_BUILD_COMMAND} \
-    || { ret=$?; printf "\e[1m\e[31m%s\e[0m\n" "Failed to build golang exec: '${prog}'."; exit "$ret"; }
-done
+printf "\e[1m\e[36m%s\e[0m\n" "${GO_BUILD_COMMAND}"
+eval ${GO_BUILD_COMMAND} \
+  || { ret=$?; printf "\e[1m\e[31m%s\e[0m\n" "Failed to build golang exec: '${GO_PROGRAM}'."; exit "$ret"; }
 # ----------------------------
 # Print information
 # ----------------------------

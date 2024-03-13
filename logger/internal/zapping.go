@@ -3,8 +3,6 @@ package internal
 import (
 	"time"
 
-	"toolkit/system"
-
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -12,9 +10,9 @@ import (
 func NewZapLogger(ws zapcore.WriteSyncer) *zap.Logger {
 	newZapEncoder := newZapEncoderFunc()
 
-	tz, layout := system.TimeZone(), timeFormat()
+	layout := tmfmtLayout()
 	timeEncoder := func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-		enc.AppendString(t.In(tz).Format(layout))
+		enc.AppendString(t.Format(layout))
 	}
 
 	encoder := newZapEncoder(

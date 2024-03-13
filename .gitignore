@@ -1,7 +1,12 @@
 .DS_Store
+.idea
 
-build
-out_go
+__debug_bin*
+
+tmp
+log
+out
+
 deploy
 
 coverage.txt

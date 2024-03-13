@@ -1,9 +1,16 @@
 {
   "name": "cgo openwrt",
-  "image": "valord577/openwrt-cgo-mt7622:46a4552f452065a59997c37ca41684c21e87ca16",
+  "image": "valord577/cgo-openwrt-mt7622:ef93d18ca03a1aea7c9d009716268df51ac22de3",
   "runArgs": [
     "--name=cgo-openwrt-${devcontainerId}"
   ],
+  "mounts": [
+    "source=${localEnv:HOME}/go,target=/root/go,type=bind"
+  ],
+  "postAttachCommand": {
+    "0": "go env -w GOPROXY=https://goproxy.cn,direct",
+    "1": "go env -w GOSUMDB=sum.golang.google.cn",
+  },
   "customizations": {
     "vscode": {
       "settings": {

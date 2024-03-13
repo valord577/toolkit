@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"toolkit/aliyun/internal"
-	"toolkit/logs"
+	"toolkit/logger"
 
 	"golang.org/x/exp/maps"
 )
@@ -94,7 +94,7 @@ func getRequestStr(method, sk string, signParams map[string]string) string {
 	buf.WriteString("&%2F&")
 	buf.WriteString(encodeStr)
 	strToSign := buf.String()
-	logs.Debugf("strToSign: %s", strToSign)
+	logger.Debugf("strToSign: %s", strToSign)
 
 	// hmac-sha1
 	w := hmac.New(sha1.New, []byte(sk+"&"))

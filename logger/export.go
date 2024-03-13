@@ -1,10 +1,10 @@
-package logs
+package logger
 
 import (
 	"os"
 	"sync"
 
-	"toolkit/logs/internal"
+	"toolkit/logger/internal"
 
 	"go.uber.org/zap"
 )
@@ -35,14 +35,6 @@ func WithOpts(opts ...zap.Option) *Logger {
 		return nil
 	}
 	return l.WithOpts(opts...)
-}
-
-// Sync calls *zap.Logger.Sync
-func Sync() (err error) {
-	if l == nil {
-		return
-	}
-	return l.Sync()
 }
 
 // Debug calls *zap.Logger.Debug

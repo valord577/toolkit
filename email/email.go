@@ -1,24 +1,10 @@
 package email
 
 import (
-	"os"
-	"strconv"
+	"toolkit/system"
 
 	"github.com/valord577/mailx"
 )
-
-func Send(m *mailx.Message) (err error) {
-	d := &mailx.Dialer{
-		Host: smtpHost(),
-		Port: smtpPort(),
-
-		Username: smtpUser(),
-		Password: smtpPass(),
-
-		SSLOnConnect: smtpTls(),
-	}
-	return d.DialAndSend(m)
-}
 
 const (
 	mailSmtpHost   = "TOOLKIT_MAIL_SMTP_HOST"
@@ -28,26 +14,27 @@ const (
 	mailSmtpUseTls = "TOOLKIT_MAIL_SMTP_USE_TLS"
 )
 
-func smtpHost() string {
-	return os.Getenv(mailSmtpHost)
-}
+func Send(m *mailx.Message) (err error) {
+	if m == nil {
+		return
+	}
 
-func smtpPort() int {
-	env := os.Getenv(mailSmtpPort)
-	port, _ := strconv.ParseInt(env, 10, 32)
-	return int(port)
-}
+	host := system.GetEnvString(mailSmtpHost)
+	port := system.GetEnvInt(mailSmtpPort)
+	user := system.GetEnvString(mailSmtpUser)
+	pass := system.GetEnvString(mailSmtpPass)
+	if len(host) < 1 || port < 1 || len(user) < 1 || len(pass) < 1 {
+		return
+	}
 
-func smtpUser() string {
-	return os.Getenv(mailSmtpUser)
-}
+	d := &mailx.Dialer{
+		Host: host,
+		Port: port,
 
-func smtpPass() string {
-	return os.Getenv(mailSmtpPass)
-}
+		Username: user,
+		Password: pass,
 
-func smtpTls() bool {
-	env := os.Getenv(mailSmtpUseTls)
-	useTls, _ := strconv.ParseBool(env)
-	return useTls
+		SSLOnConnect: system.GetEnvBool(mailSmtpUseTls),
+	}
+	return d.DialAndSend(m)
 }

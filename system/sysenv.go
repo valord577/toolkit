@@ -2,34 +2,32 @@ package system
 
 import (
 	"os"
+	"strconv"
 	"strings"
-	"time"
-)
-
-const (
-	sysHostname = "TOOLKIT_SYS_HOSTNAME"
-	sysTimeZone = "TOOLKIT_SYS_TIME_ZONE"
 )
 
 func Hostname() string {
-	hostname := os.Getenv(sysHostname)
-	hostname = strings.TrimSpace(hostname)
+	hostname := GetEnvString("TOOLKIT_SYS_HOSTNAME")
 	if len(hostname) < 1 {
 		var err error
 		hostname, err = os.Hostname()
 		if err != nil {
-			hostname = "default"
+			hostname = "development"
 		}
 	}
 	return hostname
 }
 
-func TimeZone() *time.Location {
-	env := os.Getenv(sysTimeZone)
-	env = strings.TrimSpace(env)
-	loc, err := time.LoadLocation(env)
-	if err != nil {
-		loc = time.Local
-	}
-	return loc
+func GetEnvString(key string) string {
+	return strings.TrimSpace(os.Getenv(key))
+}
+func GetEnvInt(key string) int {
+	env := strings.TrimSpace(os.Getenv(key))
+	value, _ := strconv.ParseInt(env, 10, 32)
+	return int(value)
+}
+func GetEnvBool(key string) bool {
+	env := strings.TrimSpace(os.Getenv(key))
+	value, _ := strconv.ParseBool(env)
+	return value
 }

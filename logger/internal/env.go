@@ -9,12 +9,10 @@ import (
 )
 
 // text (default) | json
-const toolkitLogsFormat = "TOOLKIT_LOGS_FORMAT"
-
 func newZapEncoderFunc() func(zapcore.EncoderConfig) zapcore.Encoder {
-	env := os.Getenv(toolkitLogsFormat)
-	env = strings.TrimSpace(env)
-	switch env {
+	env := os.Getenv("TOOLKIT_LOGS_FORMAT")
+	format := strings.TrimSpace(env)
+	switch format {
 	case "json":
 		return zapcore.NewJSONEncoder
 	default:
@@ -23,23 +21,19 @@ func newZapEncoderFunc() func(zapcore.EncoderConfig) zapcore.Encoder {
 }
 
 // development trace
-const toolkitLogsDebug = "TOOLKIT_LOGS_DEBUG"
-
 func isDebug() bool {
-	env := os.Getenv(toolkitLogsDebug)
+	env := os.Getenv("TOOLKIT_LOGS_DEBUG")
 	debug, _ := strconv.ParseBool(env)
 	return debug
 }
 
 // Golang style time format template string.
 // Default: "2006-01-02 15:04:05.000 -07:00"
-const toolkitLogsTimeFormat = "TOOLKIT_LOGS_TIME_FORMAT"
-
-func timeFormat() string {
-	env := os.Getenv(toolkitLogsTimeFormat)
-	env = strings.TrimSpace(env)
-	if len(env) < 1 {
-		env = "2006-01-02 15:04:05.000 -07:00"
+func tmfmtLayout() string {
+	env := os.Getenv("TOOLKIT_LOGS_TIME_FORMAT")
+	layout := strings.TrimSpace(env)
+	if len(layout) < 1 {
+		layout = "2006-01-02 15:04:05.000 -07:00"
 	}
-	return env
+	return layout
 }

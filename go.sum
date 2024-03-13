@@ -6,6 +6,8 @@ github.com/prashantv/gostub v1.1.0 h1:BTyx3RfQjRHnUWaGF9oQos79AlQ5k8WNktv7VGvVH4
 github.com/prashantv/gostub v1.1.0/go.mod h1:A5zLQHz7ieHGG7is6LLXLz7I8+3LZzsrV0P1IAHhP5U=
 github.com/stretchr/testify v1.8.1 h1:w7B6lhMri9wdJUVmEZPGGhZzrYTPvgJArz7wNPgYKsk=
 github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
+github.com/valord577/clix v0.4.20240306 h1:YBJLNO/1EHgr6UxrIrZAksdVrYyogfmAi5ouby+udRQ=
+github.com/valord577/clix v0.4.20240306/go.mod h1:YDz3D6DmZUBeTtBnLgeIFkJtPevu7JgC3eKMJpM2ay0=
 github.com/valord577/mailx v0.5.20231221 h1:6Izfxu0QbykEWUAEEDK5edzCAexrexErMCGW/KF9shw=
 github.com/valord577/mailx v0.5.20231221/go.mod h1:aGgPawsLOerLCxf7XU9jnke7B0lyp5Bl5JhsufWBwS0=
 go.uber.org/automaxprocs v1.5.3 h1:kWazyxZUrS3Gs4qUpbwo5kEIMGe/DAvi5Z4tl2NW4j8=

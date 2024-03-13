@@ -3,6 +3,7 @@ module toolkit
 go 1.21
 
 require (
+	github.com/valord577/clix v0.4.20240306
 	github.com/valord577/mailx v0.5.20231221
 	go.uber.org/automaxprocs v1.5.3
 	go.uber.org/zap v1.27.0

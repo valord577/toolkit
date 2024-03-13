@@ -12,6 +12,7 @@ func AliDNS(ak, sk string) *alidns {
 func (c *alidns) DescribeDomainRecordInfo(
 	endpoint, rid string, callback callback,
 ) error {
+	// https://help.aliyun.com/document_detail/2357158.html
 	const (
 		action  = "DescribeDomainRecordInfo"
 		version = "2015-01-09"
@@ -28,6 +29,7 @@ func (c *alidns) DescribeDomainRecordInfo(
 func (c *alidns) UpdateDomainRecord(
 	endpoint, rid, rr, rtype, rvalue string, callback callback,
 ) error {
+	// https://help.aliyun.com/document_detail/2355677.html
 	const (
 		action  = "UpdateDomainRecord"
 		version = "2015-01-09"
