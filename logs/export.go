@@ -1,10 +1,10 @@
-package logger
+package logs
 
 import (
 	"os"
 	"sync"
 
-	"toolkit/logger/internal"
+	"toolkit/logs/internal"
 
 	"go.uber.org/zap"
 )

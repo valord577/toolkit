@@ -1,4 +1,4 @@
-package internal
+package system
 
 const upperhex = "0123456789ABCDEF"
 

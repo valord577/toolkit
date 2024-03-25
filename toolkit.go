@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"toolkit/command"
-	"toolkit/logger"
+	"toolkit/cmds"
+	"toolkit/logs"
 	"toolkit/system"
 
 	"github.com/valord577/clix"
@@ -17,10 +17,10 @@ import (
 func init() {
 	log.SetOutput(io.Discard)
 
-	undo, err := maxprocs.Set(maxprocs.Logger(logger.Debugf))
+	undo, err := maxprocs.Set(maxprocs.Logger(logs.Debugf))
 	if err != nil {
 		undo()
-		logger.Warnf("set maxprocs, err: %s", err.Error())
+		logs.Warnf("set maxprocs, err: %s", err.Error())
 	}
 }
 
@@ -35,7 +35,7 @@ func main() {
 
 	if err := exec(); err != nil {
 		exitCode = EXIT_FAILURE
-		logger.Errorf("%s", err.Error())
+		logs.Errorf("%s", err.Error())
 	}
 }
 
@@ -50,7 +50,7 @@ func exec() error {
 	}
 
 	cmds := []*clix.Command{
-		command.CmdAutoIp,
+		cmds.AutoIp,
 	}
 	if err := cmd.AddCmd(cmds...); err != nil {
 		return err

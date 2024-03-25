@@ -1,7 +1,7 @@
-package command
+package cmds
 
 import (
-	"toolkit/logger"
+	"toolkit/logs"
 	"toolkit/service"
 	"toolkit/system"
 
@@ -13,7 +13,7 @@ const (
 	envAutoipWanRecID = "TOOLKIT_AUTOIP_WAN_RECORD_ID"
 )
 
-var CmdAutoIp = &clix.Command{
+var AutoIp = &clix.Command{
 	Name: "autoip",
 
 	Summary: "Service of DDNS",
@@ -24,7 +24,7 @@ var CmdAutoIp = &clix.Command{
 			if ip, err = service.GetLanIp(); err != nil {
 				return
 			}
-			logger.Infof("lan ip: %s", ip)
+			logs.Infof("lan ip: %s", ip)
 			if err = service.DynamicDNS(ip, lanRecID); err != nil {
 				return
 			}
@@ -36,7 +36,7 @@ var CmdAutoIp = &clix.Command{
 			if ip, err = service.GetWanIp(); err != nil {
 				return
 			}
-			logger.Infof("wan ip: %s", ip)
+			logs.Infof("wan ip: %s", ip)
 			if err = service.DynamicDNS(ip, wanRecID); err != nil {
 				return
 			}

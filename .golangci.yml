@@ -4,7 +4,7 @@ run:
   allow-serial-runners: true
   print-resources-usage: true
 output:
-  format: 'colored-line-number'
+  formats: 'colored-line-number'
 linters:
   disable-all: true
   enable:
@@ -20,7 +20,7 @@ linters-settings:
   goimports:
     local-prefixes: 'toolkit'
   govet:
-    check-shadowing: true
+    shadow: true
     enable-all: true
     disable:
       - 'fieldalignment'
