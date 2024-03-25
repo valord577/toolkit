@@ -8,7 +8,7 @@ require (
 	go.uber.org/automaxprocs v1.5.3
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.21.0
-	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225
+	golang.org/x/exp v0.0.0-20240318143956-a85f2c67cd81
 )
 
 require (

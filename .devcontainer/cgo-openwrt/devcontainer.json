@@ -4,13 +4,15 @@
   "runArgs": [
     "--name=cgo-openwrt-${devcontainerId}"
   ],
-  "mounts": [
-    "source=${localEnv:HOME}/go,target=/root/go,type=bind"
-  ],
-  "postAttachCommand": {
-    "0": "go env -w GOPROXY=https://goproxy.cn,direct",
-    "1": "go env -w GOSUMDB=sum.golang.google.cn",
+  "containerEnv": {
+    "GOPATH": "/go",
+    "GOPROXY": "https://goproxy.cn,direct",
+    "GOSUMDB": "sum.golang.google.cn"
   },
+  "mounts": [
+    "source=${localEnv:HOME}/go,target=/go,type=bind"
+  ],
+  "postAttachCommand": {},
   "customizations": {
     "vscode": {
       "settings": {
