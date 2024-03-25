@@ -57,7 +57,8 @@ func call(
 			Host:   endpoint,
 		},
 		Header: http.Header{
-			"Content-Type": {"application/x-www-form-urlencoded"},
+			"Content-Type": {"application/x-www-form-urlencoded; charset=utf-8"},
+			"User-Agent":   {system.Version()},
 		},
 
 		Method:        method,

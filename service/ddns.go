@@ -5,6 +5,7 @@ import (
 	"net/netip"
 
 	"toolkit/aliyun"
+	"toolkit/email"
 	"toolkit/logs"
 	"toolkit/system"
 )
@@ -60,6 +61,12 @@ func DynamicDNS(ip, recid string) (err error) {
 		"ip: '%s', rr: '%s', type: '%s', value: '%s'",
 		ip, record, rtype, rvalue,
 	)
+	subject := "toolkit - autoip <" + system.Hostname() + ">"
+	message := "ip: '" + ip + "', rr: '" + record + "', type: '" + rtype + "', value: '" + rvalue + "'"
+	if e := email.Alert(subject, message); e != nil {
+		logs.Errorf("send alert, err: %s", e.Error())
+	}
+
 	return alidns.UpdateDomainRecord(
 		endpoint, recid, record, rtype, ip, nil,
 	)

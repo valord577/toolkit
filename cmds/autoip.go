@@ -1,7 +1,6 @@
 package cmds
 
 import (
-	"toolkit/email"
 	"toolkit/logs"
 	"toolkit/service"
 	"toolkit/system"
@@ -19,15 +18,6 @@ var AutoIp = &clix.Command{
 
 	Summary: "Service of DDNS",
 	Run: func(*clix.Command, []string) (err error) {
-		defer func() {
-			if err == nil {
-				return
-			}
-			if e := email.Alert("toolkit - autoip <"+system.Hostname()+">", err.Error()); e != nil {
-				logs.Errorf("send alert, err: %s", e.Error())
-			}
-		}()
-
 		lanRecID := system.GetEnvString(envAutoipLanRecID)
 		if len(lanRecID) > 0 {
 			var ip string
