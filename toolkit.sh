@@ -81,7 +81,7 @@ fi
 # ----------------------------
 GO_BUILD_COMMAND=$(cat <<- EOF
 go build -v -o '${GO_INST_DIR}/${GO_PROGRAM}$(go env GOEXE)' ${GO_BUILD_GCFLAGS} \
-  -ldflags="${GO_BUILD_LDFLAGS} ${GO_MACRO_VERSION} ${GO_MACRO_DATETIME} ${GO_MACRO_FLAVOR}" \
+  -ldflags="-v ${GO_BUILD_LDFLAGS} ${GO_MACRO_VERSION} ${GO_MACRO_DATETIME} ${GO_MACRO_FLAVOR}" \
   '${PROJ_ROOT}'
 EOF
 )
