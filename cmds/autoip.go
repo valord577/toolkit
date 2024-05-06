@@ -1,8 +1,8 @@
 package cmds
 
 import (
+	"toolkit/autoip"
 	"toolkit/logs"
-	"toolkit/service"
 	"toolkit/system"
 
 	"github.com/valord577/clix"
@@ -21,11 +21,11 @@ var AutoIp = &clix.Command{
 		lanRecID := system.GetEnvString(envAutoipLanRecID)
 		if len(lanRecID) > 0 {
 			var ip string
-			if ip, err = service.GetLanIp(); err != nil {
+			if ip, err = autoip.GetLanIp(); err != nil {
 				return
 			}
 			logs.Infof("lan ip: %s", ip)
-			if err = service.DynamicDNS(ip, lanRecID); err != nil {
+			if err = autoip.DynamicDNS(ip, lanRecID); err != nil {
 				return
 			}
 		}
@@ -33,11 +33,11 @@ var AutoIp = &clix.Command{
 		wanRecID := system.GetEnvString(envAutoipWanRecID)
 		if len(wanRecID) > 0 {
 			var ip string
-			if ip, err = service.GetWanIp(); err != nil {
+			if ip, err = autoip.GetWanIp(); err != nil {
 				return
 			}
 			logs.Infof("wan ip: %s", ip)
-			if err = service.DynamicDNS(ip, wanRecID); err != nil {
+			if err = autoip.DynamicDNS(ip, wanRecID); err != nil {
 				return
 			}
 		}

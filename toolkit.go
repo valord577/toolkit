@@ -50,7 +50,7 @@ func exec() error {
 	}
 
 	cmds := []*clix.Command{
-		cmds.AutoIp,
+		cmds.AutoIp, cmds.AutoSSH,
 	}
 	if err := cmd.AddCmd(cmds...); err != nil {
 		return err

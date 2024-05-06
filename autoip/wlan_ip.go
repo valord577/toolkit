@@ -1,4 +1,4 @@
-package service
+package autoip
 
 import (
 	"bytes"

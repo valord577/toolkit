@@ -14,5 +14,20 @@
       ],
       "cwd": "${workspaceFolder}",
     },
+    {
+      "name": "[golang] debug autossh",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "env": {
+        "TOOLKIT_AUTOSSH_CONF_PATH": "${workspaceFolder}/autossh/config.jsonc",
+      },
+      "envFile": "${workspaceFolder}/toolkit.env",
+      "program": "${workspaceFolder}",
+      "args": [
+        "autossh"
+      ],
+      "cwd": "${workspaceFolder}",
+    },
   ],
 }
