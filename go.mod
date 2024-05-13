@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/valord577/clix v0.4.20240306
-	github.com/valord577/mailx v0.5.20231221
+	github.com/valord577/mailx v0.6.20240511
 	go.uber.org/automaxprocs v1.5.3
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.23.0
