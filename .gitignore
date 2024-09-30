@@ -3,11 +3,13 @@
 
 __debug_bin*
 
-tmp
-log
-out
+/tmp/
+/out/
+/lib/
 
-deploy
+/toolchain/
+
+/deploy/
 
 coverage.txt
 coverage.html

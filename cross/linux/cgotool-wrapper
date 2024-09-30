@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -e
+
+basename="${0##*/}"
+triplet="${basename##cgotool-wrapper\.}"
+
+if [[ "${triplet}" =~ ^x86_64.*$ ]]; then
+  export GOARCH=amd64; export GOAMD64=v3
+elif [[ "${triplet}" =~ ^aarch64.*$ ]]; then
+  export GOARCH=arm64
+fi
+
+export CGO_ENABLED=1
+export GOTOOLCHAIN=local
+export AR="/usr/bin/llvm-ar"
+export CGO_LDFLAGS="$(go env CGO_LDFLAGS) -fuse-ld=/usr/bin/ld.lld"
+export CC="clang --target=${triplet} --gcc-toolchain=${CROSS_TOOLCHAIN_ROOT} --sysroot=${CROSS_TOOLCHAIN_ROOT}/${triplet}/sysroot"
+export CXX="clang++ --target=${triplet} --gcc-toolchain=${CROSS_TOOLCHAIN_ROOT} --sysroot=${CROSS_TOOLCHAIN_ROOT}/${triplet}/sysroot"
+export PKG_CONFIG="${CROSS_TOOLCHAIN_PKGCONF}"
+
+exec go "$@"

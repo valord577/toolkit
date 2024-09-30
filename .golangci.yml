@@ -14,7 +14,7 @@ linters:
     - 'staticcheck'
 linters-settings:
   errcheck:
-    ignore: 'fmt:.*,bytes:^Write.*,strings:^Write.*'
+    exclude-functions: 'fmt:.*,bytes:^Write.*,strings:^Write.*'
     check-type-assertions: true
     disable-default-exclusions: true
   goimports:
