@@ -14,7 +14,10 @@ linters:
     - 'staticcheck'
 linters-settings:
   errcheck:
-    exclude-functions: 'fmt:.*,bytes:^Write.*,strings:^Write.*'
+    exclude-functions:
+      - (*bytes.Buffer).WriteByte
+      - (*strings.Builder).WriteByte
+      - (*strings.Builder).WriteString
     check-type-assertions: true
     disable-default-exclusions: true
   goimports:
