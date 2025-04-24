@@ -26,8 +26,8 @@ def module_init(env: dict) -> list:
 
 def _build_step_00():
     _build_env = {
-        **_ctx.get('BUILD_ENV', []),
-        **_env.get('BUILD_ENV', []),
+        **_ctx.get('BUILD_ENV', {}),
+        **_env.get('BUILD_ENV', {}),
     }
     _gocmd_exec = _env['GOCMD_EXEC']
     _env['FUNC_SHELL_DEVNUL'](env=_build_env, args=[_gocmd_exec, 'env'])
