@@ -1,0 +1,35 @@
+[
+  {
+    "platform": "linux",
+    "arch": "amd64",
+    "libc": "gnu"
+  },
+  {
+    "platform": "linux",
+    "arch": "arm64",
+    "libc": "gnu"
+  },
+  {
+    "platform": "linux",
+    "arch": "armv7",
+    "libc": "gnueabihf"
+  },
+  {
+    "platform": "linux",
+    "arch": "amd64",
+    "libc": "musl"
+  },
+  {
+    "platform": "linux",
+    "arch": "arm64",
+    "libc": "musl"
+  },
+  {
+    "platform": "windows",
+    "arch": "amd64"
+  },
+  {
+    "platform": "windows",
+    "arch": "arm64"
+  }
+]

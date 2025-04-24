@@ -1,0 +1,38 @@
+name: release
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.crossfiles/*'
+      - '.github/*.py'
+      - '.github/matrix*.json'
+      - '.github/workflows/_matrix.yml'
+      - '.github/workflows/release.yml'
+      - 'build.py'
+      - 'build_steps.py'
+      - '*.go'
+      - '**/*.go'
+      - 'go.mod'
+      - 'go.sum'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.crossfiles/*'
+      - '.github/*.py'
+      - '.github/matrix*.json'
+      - '.github/workflows/_matrix.yml'
+      - '.github/workflows/release.yml'
+      - 'build.py'
+      - 'build_steps.py'
+      - '*.go'
+      - '**/*.go'
+      - 'go.mod'
+      - 'go.sum'
+
+jobs:
+  build:
+    # if: ${{ false }}
+    secrets: inherit
+    uses: ./.github/workflows/_matrix.yml

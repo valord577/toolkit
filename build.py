@@ -178,7 +178,7 @@ def _setctx_apple(
     else:
         ctx.target_arch = _tuple[1]
 
-        crossfiles_dir = os.path.abspath(os.path.join(PROJ_ROOT, 'crossfiles', 'apple'))
+        crossfiles_dir = os.path.abspath(os.path.join(PROJ_ROOT, '.crossfiles', 'apple'))
         # cgotool bin
         ctx.gocmd_exec = os.path.abspath(os.path.join(crossfiles_dir, f'cgotool-wrapper.{ctx.target_arch}'))
 def _setctx_win32_mingw(
