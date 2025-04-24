@@ -1,0 +1,10 @@
+[
+  {
+    "platform": "darwin",
+    "arch": "arm64"
+  },
+  {
+    "platform": "darwin",
+    "arch": "amd64"
+  }
+]

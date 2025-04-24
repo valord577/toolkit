@@ -26,8 +26,8 @@ def module_init(env: dict) -> list:
 
 def _build_step_00():
     _build_env = {
-        **_ctx['BUILD_ENV'],
-        **_env['BUILD_ENV'],
+        **_ctx.get('BUILD_ENV', {}),
+        **_env.get('BUILD_ENV', {}),
     }
     _gocmd_exec = _env['GOCMD_EXEC']
     _env['FUNC_SHELL_DEVNUL'](env=_build_env, args=[_gocmd_exec, 'env'])
@@ -41,6 +41,9 @@ def _build_step_00():
     _git_hash = _env['FUNC_SHELL_STDOUT'](
         cwd=_env['PROJ_ROOT'], args=['git', 'describe', '--tags', '--always', '--dirty', '--abbrev=7']
     )
+    if file_ver := os.getenv('DEPS_VER'):
+        with open(file_ver, 'w') as f:
+            f.write(_git_hash)
     _go_ldflags = f"{_go_ldflags} -X '{_go_module}/system.version={_git_hash[:-1]}'"
 
     _build_datetime = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%S %Z")

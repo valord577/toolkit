@@ -1,0 +1,176 @@
+name: _matrix
+on:
+  workflow_call:
+    inputs:
+      allow_failure:
+        default: true
+        required: false
+        type: boolean
+
+      container_linux:
+        default: "linux-cross-cgo"
+        required: false
+        type: string
+      container_linux_vers:
+        default: "3491844c9ecb073544350528d4511713ca2a4b0b"
+        required: false
+        type: string
+      container_mingw:
+        default: "mingw-cross-cgo"
+        required: false
+        type: string
+      container_mingw_vers:
+        default: "3491844c9ecb073544350528d4511713ca2a4b0b"
+        required: false
+        type: string
+
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  _preset:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ github.workspace }}
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix-container: ${{ steps.set-matrix-container.outputs.matrix-container }}
+    steps:
+      - name: clone source
+        run: |
+          git config --global --add safe.directory "*"
+
+          git init
+          git remote add x ${{github.server_url}}/${{ github.repository }}.git
+          git fetch --no-tags --prune --no-recurse-submodules --depth=1 x +${{ github.sha }}
+          git checkout FETCH_HEAD
+      - name: set matrix
+        id: set-matrix
+        run: |
+          _is_apple_='.platform == "darwin"'
+
+          matrix=$(cat .github/matrix.json | jq -c -M)
+          matrix=$(echo ${matrix} | jq -c -M "map(if ${_is_apple_} then . + {os: \"macos-15\"} else . end)")
+
+          printf "\e[1m\e[33m%s\e[0m\n" "matrix: $matrix"
+          echo "matrix={\"include\":$(echo $matrix)}" >> "$GITHUB_OUTPUT"
+      - name: set matrix container
+        id: set-matrix-container
+        run: |
+          container_linux="valord577/${{ inputs.container_linux }}:${{ inputs.container_linux_vers }}"
+          container_mingw="valord577/${{ inputs.container_mingw }}:${{ inputs.container_mingw_vers }}"
+
+          matrix=$(cat .github/matrix_container.json | jq -c -M)
+          matrix=$(echo ${matrix} | jq -c -M "map(if .platform == \"linux\"   then . + {image: \"${container_linux}\"} else . end)")
+          matrix=$(echo ${matrix} | jq -c -M "map(if .platform == \"windows\" then . + {image: \"${container_mingw}\"} else . end)")
+
+          printf "\e[1m\e[33m%s\e[0m\n" "matrix: $matrix"
+          echo "matrix-container={\"include\":$(echo $matrix)}" >> "$GITHUB_OUTPUT"
+
+  _buildx_on_host:
+    needs: _preset
+    strategy:
+      matrix: ${{ fromJson(needs._preset.outputs.matrix) }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ inputs.allow_failure }}
+    defaults:
+      run:
+        shell: ${{ startsWith(matrix.os, 'windows') && 'pwsh' || 'bash' }}
+        working-directory: ${{ github.workspace }}
+    steps:
+      - name: set required software(s) - macos
+        if: ${{ startsWith(matrix.os, 'macos') }}
+        run: |
+          sudo mdutil -a -i off
+
+          brew install go; brew list -l
+      - name: set required software(s) - windows
+        if: ${{ startsWith(matrix.os, 'windows') }}
+        run: |
+          Set-MpPreference `
+            -DisableBehaviorMonitoring $True `
+            -DisableIOAVProtection     $True `
+            -DisableArchiveScanning    $True `
+            -DisableScriptScanning     $True `
+            -DisableRealtimeMonitoring $True
+          Set-ExecutionPolicy -ExecutionPolicy Bypass -Force -Scope CurrentUser
+
+          C:/msys64/usr/bin/bash.exe -lc `
+            'pacman --noconfirm -S zip;'
+      - name: clone source
+        run: |
+          git config --global --add safe.directory "*"
+
+          git init
+          git remote add x ${{github.server_url}}/${{ github.repository }}.git
+          git fetch --no-tags --prune --no-recurse-submodules --depth=1 x +${{ github.sha }}
+          git checkout FETCH_HEAD
+      - name: set required env - 00
+        run: |
+          python3 ./.github/setenv_00.py '${{ matrix.platform }}' '${{ matrix.arch }}' '${{ matrix.libc }}'
+      - name: library buildx
+        run: |
+          python3 ./build.py ${{ matrix.platform }} ${{ matrix.arch }}
+      - name: set required env - 01
+        run: |
+          python3 ./.github/setenv_01.py '${{ matrix.platform }}'
+      - name: library packed
+        run: |
+          # keep file permissions and case sensitivity
+          python3 ./.github/library_packed.py
+      - name: library upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PKG_ZIPNAME }}
+          path: ${{ env.PKG_ZIPNAME }}.zip
+          compression-level: 0
+
+  _buildx_on_container:
+    needs: _preset
+    strategy:
+      matrix: ${{ fromJson(needs._preset.outputs.matrix-container) }}
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ inputs.allow_failure }}
+    container:
+      image: ${{ matrix.image }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ github.workspace }}
+    steps:
+      - name: clone source
+        run: |
+          git config --global --add safe.directory "*"
+
+          git init
+          git remote add x ${{github.server_url}}/${{ github.repository }}.git
+          git fetch --no-tags --prune --no-recurse-submodules --depth=1 x +${{ github.sha }}
+          git checkout FETCH_HEAD
+      - name: set required env - 00
+        run: |
+          ./.github/setenv_00.py '${{ matrix.platform }}' '${{ matrix.arch }}' '${{ matrix.libc }}'
+      - name: library buildx
+        run: |
+          build_target_args='${{ matrix.platform }} ${{ matrix.arch }}'
+          ${{ matrix.platform == 'linux' }} && \
+            {
+              build_target_args='${{ matrix.platform }} crossbuild ${{ matrix.arch }} ${{ matrix.libc }}'
+            }
+
+          ./build.py ${build_target_args}
+      - name: set required env - 01
+        run: |
+          ./.github/setenv_01.py '${{ matrix.platform }}'
+      - name: library packed
+        run: |
+          # keep file permissions and case sensitivity
+          ./.github/library_packed.py
+      - name: library upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PKG_ZIPNAME }}
+          path: ${{ env.PKG_ZIPNAME }}.zip
+          compression-level: 0
