@@ -12,7 +12,7 @@ on:
         required: false
         type: string
       container_linux_vers:
-        default: "b0625a391c418460f8b5b5645987a599a3e7b61c"
+        default: "3491844c9ecb073544350528d4511713ca2a4b0b"
         required: false
         type: string
       container_mingw:
@@ -20,7 +20,7 @@ on:
         required: false
         type: string
       container_mingw_vers:
-        default: "f6aaedbed9cb2aa48519f69bf1df4bcbc3ba79a2"
+        default: "3491844c9ecb073544350528d4511713ca2a4b0b"
         required: false
         type: string
 
@@ -86,7 +86,7 @@ jobs:
         run: |
           sudo mdutil -a -i off
 
-          brew install go pkgconf; brew list -l
+          brew install go; brew list -l
       - name: set required software(s) - windows
         if: ${{ startsWith(matrix.os, 'windows') }}
         run: |
@@ -143,7 +143,6 @@ jobs:
     steps:
       - name: clone source
         run: |
-          apt update && apt install -y python3
           git config --global --add safe.directory "*"
 
           git init

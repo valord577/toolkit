@@ -34,14 +34,16 @@ class _ctx:
         self.target_plat = ''
         self.target_arch = ''
         self.target_libc = ''
-        self.env_passthrough = {}
+        self.env_passthrough = {
+            'BUILD_ENV': {},
+        }
 
         if not ON_GITHUB_CI:
-            self.env_passthrough['BUILD_ENV'] = {
+            self.env_passthrough['BUILD_ENV'].update({
                 'GO111MODULE': 'on',
                 'GOSUMDB': 'sum.golang.google.cn',
                 'GOPROXY': 'https://goproxy.cn,direct',
-            }
+            })
 
     def _lazy_import(self):
         name = 'build_steps.py'
@@ -187,7 +189,9 @@ def _setctx_win32_mingw(
     if ctx.native_plat != 'linux':
         show_errmsg(f'unsupported host os: {ctx.native_plat}')
     ctx.env_passthrough['PLATFORM_WIN32'] = True
-    ctx.env_passthrough['BUILD_ENV']['GOOS'] = 'windows'
+    ctx.env_passthrough['BUILD_ENV'].update({
+        'GOOS': 'windows',
+    })
 
     CROSS_TOOLCHAIN_ROOT = os.getenv('CROSS_TOOLCHAIN_ROOT')
     if not CROSS_TOOLCHAIN_ROOT:
