@@ -1,0 +1,11 @@
+{
+  "exclude": [
+    "**/**",
+  ],
+  "include": [
+    "*.py",
+  ],
+  "venvPath": ".",
+  "venv": ".env",
+  "typeCheckingMode": "off",
+}

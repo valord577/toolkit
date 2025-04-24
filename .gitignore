@@ -1,15 +1,16 @@
+.cache
 .DS_Store
+.env
+__pycache__
+
 .idea
 
 __debug_bin*
 
+/.lib.*/
+
 /tmp/
 /out/
-/lib/
 
-/toolchain/
-
-/deploy/
-
-coverage.txt
-coverage.html
+/deploy
+/toolchain
