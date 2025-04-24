@@ -13,8 +13,6 @@ import (
 
 	"toolkit/logs"
 	"toolkit/system"
-
-	"golang.org/x/exp/maps"
 )
 
 type callback func(*http.Response) error
@@ -46,7 +44,9 @@ func call(
 		"SignatureMethod":  "HMAC-SHA1",
 		"SignatureVersion": "1.0",
 	}
-	maps.Copy(signParams, actionParams)
+	for k, v := range actionParams {
+		signParams[k] = v
+	}
 
 	method := http.MethodPost
 	body := getRequestStr(method, sk, signParams)
@@ -79,7 +79,10 @@ func call(
 func getRequestStr(method, sk string, signParams map[string]string) string {
 	buf := &strings.Builder{}
 
-	keys := maps.Keys(signParams)
+	keys := make([]string, 0, len(signParams))
+	for k := range signParams {
+		keys = append(keys, k)
+	}
 	sort.Strings(keys)
 	for _, k := range keys {
 		buf.WriteString(system.Escape(k))

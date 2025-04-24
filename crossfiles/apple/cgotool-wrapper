@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -e
+
+BASE_DIR=$(cd "$(dirname ${BASH_SOURCE[0]})"; pwd)
+
+
+_go_exec_="go"
+# { command -v go >/dev/null 2>&1; } && \
+#   { _go_exec_="$(command -v go)"; }
+
+
+basename="${0##*/}"
+triplet="${basename##cgotool-wrapper\.}"
+
+if [[ "${triplet}" =~ ^amd64.*$ ]]; then
+  export GOARCH=amd64; export GOAMD64=v3;   _arch_='x86_64'
+elif [[ "${triplet}" =~ ^arm64.*$ ]]; then
+  export GOARCH=arm64; export GOARM64=v8.2; _arch_='arm64'
+fi
+
+export SYSROOT=$(xcrun --sdk macosx --show-sdk-path)
+
+export CGO_ENABLED=1
+export GOTOOLCHAIN=local
+export CC="clang -isysroot ${SYSROOT} -arch ${_arch_} -mmacosx-version-min=10.15"
+export CXX="clang++ -isysroot ${SYSROOT} -arch ${_arch_} -mmacosx-version-min=10.15"
+export PKG_CONFIG="${BASE_DIR}/pkgconf-wrapper"
+
+exec "${_go_exec_}" "$@"
