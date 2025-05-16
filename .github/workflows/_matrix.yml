@@ -12,7 +12,7 @@ on:
         required: false
         type: string
       container_linux_vers:
-        default: "3491844c9ecb073544350528d4511713ca2a4b0b"
+        default: "787973a8716b364e1c4d3209046549e6078a6d98"
         required: false
         type: string
       container_mingw:
@@ -20,7 +20,7 @@ on:
         required: false
         type: string
       container_mingw_vers:
-        default: "3491844c9ecb073544350528d4511713ca2a4b0b"
+        default: "3144fd6fbb07aa336639dac4ad8ee7c9e4c79908"
         required: false
         type: string
 
