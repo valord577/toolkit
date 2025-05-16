@@ -5,6 +5,7 @@
 import datetime as dt
 import importlib.util
 import os
+import platform
 import shutil
 import subprocess as sp
 import sys
@@ -29,8 +30,12 @@ class _ctx:
         self.script = self._lazy_import()
         self.gocmd_exec  = shutil.which('go') or 'go'
         self.extra_args  = []
-        self.native_plat = _util_func__subprocess_stdout(['go', 'env', 'GOHOSTOS'])[:-1]
-        self.native_arch = _util_func__subprocess_stdout(['go', 'env', 'GOHOSTARCH'])[:-1]
+
+        self.native_plat = platform.system().lower()
+        self.native_arch = platform.machine().lower()
+        if self.native_arch == 'x86_64':  self.native_arch = 'amd64'
+        if self.native_arch == 'aarch64': self.native_arch = 'arm64'
+
         self.target_plat = ''
         self.target_arch = ''
         self.target_libc = ''
@@ -117,7 +122,7 @@ def _self_func__tree(basepath: str, depth: int = 0):
                         entry.is_dir(follow_symlinks=False),
                     )
                 )
-def _util_func__subprocess_stdout(args: list[str],
+def _util_func__subprocess_stdout(args: Union[str, list[str]],
     cwd: Union[str, None] = None, env: Union[dict[str, str], None] = None, shell=False
 ) -> str:
     print(f'>>>> subprocess cmdline: {args}', file=sys.stderr)
@@ -126,7 +131,7 @@ def _util_func__subprocess_stdout(args: list[str],
         print(f'>>>> subprocess exitcode: {proc.returncode}', file=sys.stderr)
         sys.exit(proc.returncode)
     return proc.stdout
-def _util_func__subprocess_devnul(args: list[str],
+def _util_func__subprocess_devnul(args: Union[str, list[str]],
     cwd: Union[str, None] = None, env: Union[dict[str, str], None] = None, shell=False
 ):
     print(f'>>>> subprocess cmdline: {args}', file=sys.stderr)
@@ -146,7 +151,9 @@ def _setctx_linux(
     ctx.env_passthrough['PLATFORM_LINUX'] = True
 
     if _native:
-        ctx.target_arch = _util_func__subprocess_stdout(['go', 'env', 'GOARCH'])[:-1]
+        ctx.target_arch = ctx.native_arch
+        if not (ctx.target_arch in ['arm64', 'amd64']):
+            show_errmsg(f'unsupported target arch: {ctx.native_arch}')
     else:
         CROSS_TOOLCHAIN_ROOT = os.getenv('CROSS_TOOLCHAIN_ROOT')
         if not CROSS_TOOLCHAIN_ROOT:
@@ -176,7 +183,9 @@ def _setctx_apple(
     ctx.env_passthrough['PLATFORM_APPLE'] = True
 
     if _native:
-        ctx.target_arch = _util_func__subprocess_stdout(['go', 'env', 'GOARCH'])[:-1]
+        ctx.target_arch = ctx.native_arch
+        if not (ctx.target_arch in ['arm64', 'amd64']):
+            show_errmsg(f'unsupported target arch: {ctx.native_arch}')
     else:
         ctx.target_arch = _tuple[1]
 
@@ -220,6 +229,7 @@ _targets = {
             ('linux', 'crossbuild', 'armv7', 'gnueabihf'),
             ('linux', 'crossbuild', 'amd64', 'musl'),
             ('linux', 'crossbuild', 'arm64', 'musl'),
+            ('linux', 'crossbuild', 'armv7', 'musleabihf'),
         ],
     },
     'darwin': {
@@ -277,7 +287,6 @@ if __name__ == "__main__":
         else:
             argv_tgt.append(arg)
     argc_tgt = len(argv_tgt)
-    argv_mod: str = _util_func__subprocess_stdout(['go', 'list', '-m'])
 
 
     ctx = _ctx()
