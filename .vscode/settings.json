@@ -1,7 +1,7 @@
 {
-    "go.toolsEnvVars": {},
-    "go.delveConfig": {},
-    "gopls": {
-        "formatting.local": "toolkit"
-    }
+  "go.toolsEnvVars": {},
+  "go.delveConfig": {},
+  "gopls": {
+    "formatting.local": "toolkit"
+  }
 }

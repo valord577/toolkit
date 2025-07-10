@@ -1,9 +1,9 @@
-package cmds
+package tools
 
 import (
-	"toolkit/autoip"
 	"toolkit/logs"
 	"toolkit/system"
+	"toolkit/tools/autoip"
 
 	"github.com/valord577/clix"
 )

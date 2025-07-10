@@ -1,14 +1,14 @@
-package cmds
+package tools
 
 import (
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/valord577/clix"
-
-	"toolkit/autossh"
 	"toolkit/logs"
+	"toolkit/tools/autossh"
+
+	"github.com/valord577/clix"
 )
 
 var AutoSSH = &clix.Command{

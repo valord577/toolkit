@@ -6,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"toolkit/cmds"
 	"toolkit/logs"
 	"toolkit/system"
+	"toolkit/tools"
 
 	"github.com/valord577/clix"
 	"go.uber.org/automaxprocs/maxprocs"
@@ -20,7 +20,7 @@ func init() {
 	undo, err := maxprocs.Set(maxprocs.Logger(logs.Debugf))
 	if err != nil {
 		undo()
-		logs.Warnf("set maxprocs, err: %s", err.Error())
+		logs.Debugf("set maxprocs, err: %s", err.Error())
 	}
 }
 
@@ -50,7 +50,7 @@ func exec() error {
 	}
 
 	cmds := []*clix.Command{
-		cmds.AutoIp, cmds.AutoSSH,
+		tools.AutoIp, tools.AutoSSH,
 	}
 	if err := cmd.AddCmd(cmds...); err != nil {
 		return err
