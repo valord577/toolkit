@@ -1,9 +1,10 @@
 package tools
 
 import (
+	"toolkit/tools/internal/autoip"
+
 	"toolkit/logs"
 	"toolkit/system"
-	"toolkit/tools/autoip"
 
 	"github.com/valord577/clix"
 )

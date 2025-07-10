@@ -1,12 +1,13 @@
 package tools
 
 import (
+	"toolkit/tools/internal/autossh"
+
+	"toolkit/logs"
+
 	"os"
 	"os/signal"
 	"syscall"
-
-	"toolkit/logs"
-	"toolkit/tools/autossh"
 
 	"github.com/valord577/clix"
 )
