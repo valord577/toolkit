@@ -2,11 +2,11 @@ package autoip
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/netip"
 
 	"toolkit/aliyun"
 	"toolkit/email"
-	"toolkit/logs"
 	"toolkit/system"
 )
 
@@ -57,14 +57,12 @@ func DynamicDNS(ip, recid string) (err error) {
 	if err != nil || ip == rvalue {
 		return
 	}
-	logs.Infof(
-		"ip: '%s', rr: '%s', type: '%s', value: '%s'",
-		ip, record, rtype, rvalue,
-	)
+	slog.Info("ip: '" + ip + "', rr: '" + record + "', type: '" + rtype + "', value: '" + rvalue + "'")
+
 	subject := "toolkit - autoip <" + system.Hostname() + ">"
 	message := "ip: '" + ip + "', rr: '" + record + "', type: '" + rtype + "', value: '" + rvalue + "'"
 	if e := email.Alert(subject, message); e != nil {
-		logs.Errorf("send alert, err: %s", e.Error())
+		slog.Error("send alert, errmsg: " + e.Error())
 	}
 
 	return alidns.UpdateDomainRecord(

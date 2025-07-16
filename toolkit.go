@@ -1,12 +1,10 @@
 package main
 
 import (
-	"io"
-	"log"
+	"log/slog"
 	"os"
 	"path/filepath"
 
-	"toolkit/logs"
 	"toolkit/system"
 	"toolkit/tools"
 
@@ -15,12 +13,12 @@ import (
 )
 
 func init() {
-	log.SetOutput(io.Discard)
+	system.StructuredLogging()
 
-	undo, err := maxprocs.Set(maxprocs.Logger(logs.Debugf))
+	undo, err := maxprocs.Set()
 	if err != nil {
 		undo()
-		logs.Debugf("set maxprocs, err: %s", err.Error())
+		slog.Debug("set maxprocs, errmsg: " + err.Error())
 	}
 }
 
@@ -35,7 +33,7 @@ func main() {
 
 	if err := exec(); err != nil {
 		exitCode = EXIT_FAILURE
-		logs.Errorf("%s", err.Error())
+		slog.Error(err.Error())
 	}
 }
 
@@ -49,11 +47,8 @@ func exec() error {
 		},
 	}
 
-	cmds := []*clix.Command{
-		tools.AutoIp, tools.AutoSSH,
-	}
-	if err := cmd.AddCmd(cmds...); err != nil {
-		return err
-	}
+	cmd.AddCmd(
+		tools.AutoIp,
+	)
 	return cmd.Execute()
 }

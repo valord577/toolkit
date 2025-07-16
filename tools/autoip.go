@@ -1,10 +1,10 @@
 package tools
 
 import (
-	"toolkit/tools/internal/autoip"
+	"log/slog"
 
-	"toolkit/logs"
 	"toolkit/system"
+	"toolkit/tools/internal/autoip"
 
 	"github.com/valord577/clix"
 )
@@ -25,7 +25,7 @@ var AutoIp = &clix.Command{
 			if ip, err = autoip.GetLanIp(); err != nil {
 				return
 			}
-			logs.Infof("lan ip: %s", ip)
+			slog.Info("lan ip: " + ip)
 			if err = autoip.DynamicDNS(ip, lanRecID); err != nil {
 				return
 			}
@@ -37,7 +37,7 @@ var AutoIp = &clix.Command{
 			if ip, err = autoip.GetWanIp(); err != nil {
 				return
 			}
-			logs.Infof("wan ip: %s", ip)
+			slog.Info("wan ip: " + ip)
 			if err = autoip.DynamicDNS(ip, wanRecID); err != nil {
 				return
 			}
