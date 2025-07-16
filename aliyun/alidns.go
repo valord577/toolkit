@@ -1,11 +1,10 @@
 package aliyun
 
 import (
-	"fmt"
+	"errors"
 	"io"
+	"log/slog"
 	"net/http"
-
-	"toolkit/logs"
 )
 
 type alidns struct {
@@ -26,17 +25,16 @@ func (c *alidns) callback(
 			return err
 		}
 
-		format := "%s, Status: %s, Response: %s"
-		args := []any{action, r.Status, string(bs)}
+		errmsg := action + ", Status: " + r.Status + ", Response: " + string(bs)
 		if r.StatusCode != http.StatusOK {
-			return fmt.Errorf(format, args...)
+			return errors.New(errmsg)
 		}
-		logs.Debugf(format, args...)
+		slog.Debug(errmsg)
 
 		if f != nil {
-			return f(bs)
+			err = f(bs)
 		}
-		return nil
+		return err
 	}
 }
 

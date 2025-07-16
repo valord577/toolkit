@@ -5,13 +5,13 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"io"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"sort"
 	"strings"
 	"time"
 
-	"toolkit/logs"
 	"toolkit/system"
 )
 
@@ -98,7 +98,7 @@ func getRequestStr(method, sk string, signParams map[string]string) string {
 	buf.WriteString("&%2F&")
 	buf.WriteString(encodeStr)
 	strToSign := buf.String()
-	logs.Debugf("strToSign: %s", strToSign)
+	slog.Debug("strToSign: " + strToSign)
 
 	// hmac-sha1
 	w := hmac.New(sha1.New, []byte(sk+"&"))

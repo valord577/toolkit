@@ -1,8 +1,8 @@
-package autossh
+package system
 
 import "bytes"
 
-func jsoncIgnoreComments(bs []byte) []byte {
+func JsoncIgnoreComments(bs []byte) []byte {
 	length := len(bs)
 	if length == 0 {
 		return bs
