@@ -122,7 +122,7 @@ jobs:
           # keep file permissions and case sensitivity
           python3 ./.github/library_packed.py
       - name: library upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.PKG_ZIPNAME }}
           path: ${{ env.PKG_ZIPNAME }}.zip
@@ -169,7 +169,7 @@ jobs:
           # keep file permissions and case sensitivity
           ./.github/library_packed.py
       - name: library upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.PKG_ZIPNAME }}
           path: ${{ env.PKG_ZIPNAME }}.zip
