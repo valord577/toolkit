@@ -49,6 +49,7 @@ func exec() error {
 
 	cmd.AddCmd(
 		tools.AutoIp,
+		tools.FileSaver,
 	)
 	return cmd.Execute()
 }

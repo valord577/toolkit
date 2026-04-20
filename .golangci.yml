@@ -16,8 +16,10 @@ linters-settings:
   errcheck:
     exclude-functions:
       - (*bytes.Buffer).WriteByte
+      - (*bytes.Buffer).WriteString
       - (*strings.Builder).WriteByte
       - (*strings.Builder).WriteString
+      - (hash.Hash).Write
     check-type-assertions: true
     disable-default-exclusions: true
   goimports:
