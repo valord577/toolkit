@@ -126,7 +126,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: ${{ env.PKG_ZIPNAME }}
-          path: out/${{ env.PKG_ZIPNAME }}.zip
+          path: ${{ env.PKG_ZIPNAME }}.zip
           compression-level: 0
 
   _buildx_on_container:
@@ -173,5 +173,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: ${{ env.PKG_ZIPNAME }}
-          path: out/${{ env.PKG_ZIPNAME }}.zip
+          path: ${{ env.PKG_ZIPNAME }}.zip
           compression-level: 0
