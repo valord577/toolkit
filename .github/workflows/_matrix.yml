@@ -27,6 +27,7 @@ on:
 
 env:
   GH_TOKEN: ${{ github.token }}
+  INST_DIR: ${{ github.workspace }}/out
 
 jobs:
   _preset:

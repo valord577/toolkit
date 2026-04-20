@@ -2,22 +2,53 @@
 
 # fmt: off
 
+import sys
+sys.dont_write_bytecode = True
+
+from scripts import utils as x
+# ----------------------------
+
 import datetime as dt
 import os
-import shlex
-import shutil
+
+from pathlib import Path
+
+if __name__ == "__main__":
+    _build_entry = (Path(x.PROJ_ROOT) / 'build.py').resolve().absolute().as_posix()
+    help_str  = f'Usage: [python3] {_build_entry} --help\n'
+    x.print_stderr(help_str[:-1])
+    sys.exit(1)
 
 
-_env: dict = {}
-_ctx: dict = {
-    'PKG_INST_STRIP': '',
-    'BUILD_ENV': os.environ.copy(),
 
-    'EXTRA_ARGS_CONFIGURE': [],
-}
+BUILD_CMD  = 'go'
+BUILD_ENV  = os.environ.copy()
+GO_LDFLAGS = '-v'
+
+_target_platform = ''
+_target_archlibc = ''
+_target_optimization = 'default'
+
+_pkg_inst_dir = ''
+
+_extra_args_build: list[str] = []
 
 def module_init(env: dict) -> list:
-    global _env; _env = env
+    global BUILD_CMD; \
+        BUILD_CMD = env['GOCMD_EXEC']
+    global GO_LDFLAGS; \
+        GO_LDFLAGS = env['GO_LDFLAGS']
+    global _target_optimization; \
+        _target_optimization = env['OPTIMIZATION']
+    global _pkg_inst_dir; \
+        _pkg_inst_dir = env['PKG_INST_DIR']
+    global _extra_args_build; \
+        _extra_args_build = env['EXTRA_ARGS']
+
+    BUILD_ENV.update({
+        **env['GOENV_BULD']
+    })
+
     return [
         _build_step_00,
     ]
@@ -25,42 +56,23 @@ def module_init(env: dict) -> list:
 
 
 def _build_step_00():
-    _build_env = {
-        **_ctx.get('BUILD_ENV', {}),
-        **_env.get('BUILD_ENV', {}),
-    }
-    _gocmd_exec = _env['GOCMD_EXEC']
-    _env['FUNC_SHELL_DEVNUL'](env=_build_env, args=[_gocmd_exec, 'env'])
+    x._util_func__subprocess(env=BUILD_ENV, args=[BUILD_CMD, 'env'])
 
+    _go_module = x._util_func__subprocess(collect_stdout=True, cwd=x.PROJ_ROOT, env=BUILD_ENV, args=[BUILD_CMD, 'list', '-m']).strip()
+    _go_suffix = x._util_func__subprocess(collect_stdout=True, cwd=x.PROJ_ROOT, env=BUILD_ENV, args=[BUILD_CMD, 'env', 'GOEXE']).strip()
+    x._util_put_pkg_version_desc(x._util_func__subprocess(cwd=x.PROJ_ROOT, collect_stdout=True, args=['git', 'describe', '--always', '--abbrev=7']))
 
-    _go_module = _env['FUNC_SHELL_STDOUT'](cwd=_env['PROJ_ROOT'], args=[_gocmd_exec, 'list', '-m'])[:-1]
-    _go_exe = _env['FUNC_SHELL_STDOUT'](env=_build_env, args=[_gocmd_exec, 'env', 'GOEXE'])[:-1]
-    _go_extra_args = _env['EXTRA_ARGS']
-    _go_ldflags = "-v"
-
-    _git_hash = _env['FUNC_SHELL_STDOUT'](
-        cwd=_env['PROJ_ROOT'], args=['git', 'describe', '--tags', '--always', '--dirty', '--abbrev=7']
-    )
-    if file_ver := os.getenv('DEPS_VER'):
-        with open(file_ver, 'w') as f:
-            f.write(_git_hash)
-    _go_ldflags = f"{_go_ldflags} -X '{_go_module}/system.version={_git_hash[:-1]}'"
+    _go_ldflags  = GO_LDFLAGS
+    _go_ldflags += f" -X '{_go_module}/system.version={x._util_get_pkg_version_desc()}'"
 
     _build_datetime = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%S %Z")
-    _go_ldflags = f"{_go_ldflags} -X '{_go_module}/system.datetime={_build_datetime}'"
+    _go_ldflags += f" -X '{_go_module}/system.datetime={_build_datetime}'"
 
-    if _env['LIB_RELEASE'] == '0':
-        _go_extra_args.extend(['-gcflags', '-N -l'])
-    if _env['LIB_RELEASE'] == '1':
-        _go_ldflags = f"{_go_ldflags} -s -w"
-    _go_ldflags = f"{_go_ldflags} -X '{_go_module}/system.flavor={_env['LIB_RELEASE']}'"
+    _go_ldflags += f" -X '{_go_module}/system.flavor={_target_optimization}'"
 
 
-    args = [
-        _gocmd_exec, 'build', #'-x',
-        '-o', f"{_env['PKG_INST_DIR']}/{_go_module}{_go_exe}",
+    args = [BUILD_CMD, 'build', #'-x',
+        '-o', f"{_pkg_inst_dir}/{_go_module}{_go_suffix}",
         '-ldflags', _go_ldflags,
     ]
-    args.extend(_go_extra_args)
-    args.append(_env['PROJ_ROOT'])
-    _env['FUNC_SHELL_DEVNUL'](cwd=_env['PROJ_ROOT'], env=_build_env, args=args)
+    x._util_func__subprocess(cwd=x.PROJ_ROOT, env=BUILD_ENV, args=[*args, *_extra_args_build, '.'])
