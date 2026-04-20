@@ -118,7 +118,7 @@ def _setctx_apple(
     else:
         ctx.target_arch = _tuple[1]
 
-        crossfiles_dir = (Path(x.PROJ_ROOT) / 'crossfiles' / 'apple')
+        crossfiles_dir = (Path(x.PROJ_ROOT) / '.crossfiles' / 'apple')
         # cgotool bin
         ctx.gocmd_exec = (Path(crossfiles_dir) / f'cgotool-wrapper.{ctx.target_arch}').absolute().as_posix()
 def _setctx_win32_mingw(
